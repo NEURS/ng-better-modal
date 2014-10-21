@@ -1,6 +1,6 @@
 {
   "name": "ngModal",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "main": ["dist/ng-modal.js", "dist/ng-modal.css"],
   "ignore": [
     ".gitignore",

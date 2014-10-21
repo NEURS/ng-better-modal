@@ -24,7 +24,18 @@ app.provider "ngModalDefaults", ->
     else
       @options[keyOrHash] = value
 
-app.directive 'modalDialog', ['ngModalDefaults', '$sce', (ngModalDefaults, $sce) ->
+app.factory 'ngModalContents', ->
+  data =
+    contents:''
+    get: ->
+      @contents
+
+    set: (value) ->
+      @contents = value
+
+  data
+
+app.directive 'modalDialog', ['ngModalDefaults', 'ngModalContents', '$sce', (ngModalDefaults, ngModalContents, $sce) ->
   restrict: 'E'
   scope:
     show: '='
@@ -45,6 +56,8 @@ app.directive 'modalDialog', ['ngModalDefaults', '$sce', (ngModalDefaults, $sce)
       scope.show = false
 
     scope.$watch('show', (newVal, oldVal) ->
+      if ngModalContents
+        document.getElementsByClassName('ng-modal-dialog-content')[0].innerHTML = $sce.trustAsHtml ngModalContents.get()
       if newVal && !oldVal
         document.getElementsByTagName("body")[0].style.overflow = "hidden";
       else

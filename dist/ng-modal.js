@@ -27,8 +27,61 @@
     };
   });
 
+  app.factory('ngModalContents', function() {
+    var data;
+    data = {
+      contents: {},
+      get: function() {
+        return this.contents;
+      },
+      set: function(keyOrHash, value) {
+        var k, v;
+        if (typeof keyOrHash === 'object') {
+          for (k in keyOrHash) {
+            v = keyOrHash[k];
+            this.contents[k] = v;
+          }
+        } else {
+          this.contents[keyOrHash] = value;
+        }
+        return this.contents;
+      },
+      getContentTemplate: function() {
+        var template, urlEncoded;
+        if ((this.contents.value != null) && !this.contents.source) {
+          throw new Error("no valid content");
+        }
+        template = '';
+        if ((this.contents.type != null) && (this.contents.source != null)) {
+          switch (this.contents.type) {
+            case "audio":
+              urlEncoded = encodeURI(this.contents.source);
+              template += '<iframe width="640" height="450" scrolling="no" frameborder="no"';
+              template += 'src="https://w.soundcloud.com/player/?url=' + urlEncoded + '&amp;';
+              template += 'auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;';
+              template += 'show_user=true&amp;show_reposts=false&amp;visual=true"></iframe>';
+              break;
+            case "photo":
+              template += '<image src="https://' + this.contents.source + '" alt=' + this.contents.title + ' />';
+              break;
+            case "video":
+              template += '<iframe src="https://' + this.contents.source + '" width="640" ';
+              template += 'height="450" frameborder="0" webkitallowfullscreen ';
+              template += 'mozallowfullscreen allowfullscreen></iframe>';
+          }
+          return template;
+        } else if (this.contents.value != null) {
+          console.log("There is value");
+          template += '<div>' + this.contents.value + '</div>';
+        }
+        return template;
+      }
+    };
+    return data;
+  });
+
   app.directive('modalDialog', [
-    'ngModalDefaults', '$sce', function(ngModalDefaults, $sce) {
+    'ngModalDefaults', 'ngModalContents', '$sce', function(ngModalDefaults, ngModalContents, $sce) {
       return {
         restrict: 'E',
         scope: {
@@ -56,6 +109,10 @@
             return scope.show = false;
           };
           scope.$watch('show', function(newVal, oldVal) {
+            if ((ngModalContents != null) && (ngModalContents.get() != null)) {
+              ngModalContents.getContentTemplate();
+              document.getElementsByClassName('ng-modal-dialog-content')[0].innerHTML = $sce.trustAsHtml(ngModalContents.getContentTemplate());
+            }
             if (newVal && !oldVal) {
               document.getElementsByTagName("body")[0].style.overflow = "hidden";
             } else {

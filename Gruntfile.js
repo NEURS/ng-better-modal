@@ -50,5 +50,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-zip');
 
   grunt.registerTask('default', ['coffee', 'uglify', 'less', 'watch']);
+  grunt.registerTask('build', ['coffee', 'uglify', 'less']);
   grunt.registerTask('package', ['coffee', 'uglify', 'less', 'zip']);
 };

@@ -26,12 +26,45 @@ app.provider "ngModalDefaults", ->
 
 app.factory 'ngModalContents', ->
   data =
-    contents:''
+    contents:{}
     get: ->
       @contents
 
-    set: (value) ->
-      @contents = value
+    set: (keyOrHash, value) ->
+      if typeof(keyOrHash) == 'object'
+        for k, v of keyOrHash
+          @contents[k] = v
+      else
+        @contents[keyOrHash] = value
+      @contents
+    getContentTemplate: ->
+      if @contents.value? && !@contents.source
+        throw new Error "no valid content"
+
+      template = ''
+
+      if @contents.type? && @contents.source?
+        switch @contents.type
+          when "audio"
+            urlEncoded = encodeURI(@contents.source)
+            template += '<iframe width="640" height="450" scrolling="no" frameborder="no"'
+            template += 'src="https://w.soundcloud.com/player/?url=' + urlEncoded + '&amp;'
+            template += 'auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;'
+            template += 'show_user=true&amp;show_reposts=false&amp;visual=true"></iframe>'
+          when "photo"
+            template += '<image src="https://' + @contents.source + '" alt=' + @contents.title + ' />'
+          when "video"
+            template += '<iframe src="https://' + @contents.source + '" width="640" '
+            template += 'height="450" frameborder="0" webkitallowfullscreen '
+            template += 'mozallowfullscreen allowfullscreen></iframe>'
+
+        return template
+
+      else if @contents.value?
+        console.log "There is value"
+        template += '<div>' + @contents.value + '</div>'
+
+      return template
 
   data
 
@@ -56,8 +89,8 @@ app.directive 'modalDialog', ['ngModalDefaults', 'ngModalContents', '$sce', (ngM
       scope.show = false
 
     scope.$watch('show', (newVal, oldVal) ->
-      if ngModalContents
-        document.getElementsByClassName('ng-modal-dialog-content')[0].innerHTML = $sce.trustAsHtml ngModalContents.get()
+      if ngModalContents? and ngModalContents.get()?
+        document.getElementsByClassName('ng-modal-dialog-content')[0].innerHTML = $sce.trustAsHtml ngModalContents.getContentTemplate()
       if newVal && !oldVal
         document.getElementsByTagName("body")[0].style.overflow = "hidden";
       else

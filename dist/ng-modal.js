@@ -79,7 +79,7 @@
     return data;
   });
 
-  app.directive('ngModalContent', [
+  app.directive('modalContent', [
     'ngModalContents', '$sce', function(ngModalContents, $sce) {
       return {
         restrict: 'A',

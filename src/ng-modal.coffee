@@ -60,15 +60,33 @@ app.factory 'ngModalContents', ->
 
         return template
 
-      else if @contents.value?
-        console.log "There is value"
-        template += '<div>' + @contents.value + '</div>'
+      else if @contents.content?
+        template += '<div>' + @contents.content + '</div>'
 
       return template
 
   data
 
-app.directive 'modalDialog', ['ngModalDefaults', 'ngModalContents', '$sce', (ngModalDefaults, ngModalContents, $sce) ->
+app.directive 'modalContent', ['ngModalContents','$sce', (ngModalContents, $sce) ->
+  restrict: 'A'
+  scope: {
+    type: '@',
+    source: '@'
+  }
+  link: ($scope, $element, $attributes) ->
+    console.log $attributes
+    ngModalContents.set {
+      type: $attributes.type,
+      source: $attributes.source
+    }
+
+    if ngModalContents? and ngModalContents.get()?
+      document.getElementsByClassName('ng-modal-dialog-content')[0].innerHTML = $sce.trustAsHtml ngModalContents.getContentTemplate()
+    else
+      document.getElementsByClassName('ng-modal-dialog-content')[0].innerHTML = ''
+
+]
+app.directive 'modalDialog', ['ngModalDefaults', '$sce', (ngModalDefaults, $sce) ->
   restrict: 'E'
   scope:
     show: '='
@@ -89,8 +107,6 @@ app.directive 'modalDialog', ['ngModalDefaults', 'ngModalContents', '$sce', (ngM
       scope.show = false
 
     scope.$watch('show', (newVal, oldVal) ->
-      if ngModalContents? and ngModalContents.get()?
-        document.getElementsByClassName('ng-modal-dialog-content')[0].innerHTML = $sce.trustAsHtml ngModalContents.getContentTemplate()
       if newVal && !oldVal
         document.getElementsByTagName("body")[0].style.overflow = "hidden";
       else

@@ -70,9 +70,8 @@
               template += 'mozallowfullscreen allowfullscreen></iframe>';
           }
           return template;
-        } else if (this.contents.value != null) {
-          console.log("There is value");
-          template += '<div>' + this.contents.value + '</div>';
+        } else if (this.contents.content != null) {
+          template += '<div>' + this.contents.content + '</div>';
         }
         return template;
       }
@@ -80,8 +79,32 @@
     return data;
   });
 
+  app.directive('ngModalContent', [
+    'ngModalContents', '$sce', function(ngModalContents, $sce) {
+      return {
+        restrict: 'A',
+        scope: {
+          type: '@',
+          source: '@'
+        },
+        link: function($scope, $element, $attributes) {
+          console.log($attributes);
+          ngModalContents.set({
+            type: $attributes.type,
+            source: $attributes.source
+          });
+          if ((ngModalContents != null) && (ngModalContents.get() != null)) {
+            return document.getElementsByClassName('ng-modal-dialog-content')[0].innerHTML = $sce.trustAsHtml(ngModalContents.getContentTemplate());
+          } else {
+            return document.getElementsByClassName('ng-modal-dialog-content')[0].innerHTML = '';
+          }
+        }
+      };
+    }
+  ]);
+
   app.directive('modalDialog', [
-    'ngModalDefaults', 'ngModalContents', '$sce', function(ngModalDefaults, ngModalContents, $sce) {
+    'ngModalDefaults', '$sce', function(ngModalDefaults, $sce) {
       return {
         restrict: 'E',
         scope: {
@@ -109,10 +132,6 @@
             return scope.show = false;
           };
           scope.$watch('show', function(newVal, oldVal) {
-            if ((ngModalContents != null) && (ngModalContents.get() != null)) {
-              ngModalContents.getContentTemplate();
-              document.getElementsByClassName('ng-modal-dialog-content')[0].innerHTML = $sce.trustAsHtml(ngModalContents.getContentTemplate());
-            }
             if (newVal && !oldVal) {
               document.getElementsByTagName("body")[0].style.overflow = "hidden";
             } else {

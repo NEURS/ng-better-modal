@@ -74,15 +74,16 @@ app.directive 'modalContent', ['ngModalContents','$sce', (ngModalContents, $sce)
     source: '@'
   }
   link: ($scope, $element, $attributes) ->
-    ngModalContents.set {
-      type: $attributes.type,
-      source: $attributes.source
-    }
+    $scope.$watch ()->
+      ngModalContents.set {
+        type: $attributes.type,
+        source: $attributes.source
+      }
 
-    if ngModalContents? and ngModalContents.get()?
-      document.getElementsByClassName('ng-modal-dialog-content')[0].innerHTML = $sce.trustAsHtml ngModalContents.getContentTemplate()
-    else
-      document.getElementsByClassName('ng-modal-dialog-content')[0].innerHTML = ''
+      if ngModalContents? and ngModalContents.get()?
+        document.getElementsByClassName('ng-modal-dialog-content')[0].innerHTML = $sce.trustAsHtml ngModalContents.getContentTemplate()
+      else
+        document.getElementsByClassName('ng-modal-dialog-content')[0].innerHTML = ''
 
 ]
 app.directive 'modalDialog', ['ngModalDefaults', '$sce', (ngModalDefaults, $sce) ->

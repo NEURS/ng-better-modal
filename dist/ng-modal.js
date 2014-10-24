@@ -88,15 +88,17 @@
           source: '@'
         },
         link: function($scope, $element, $attributes) {
-          ngModalContents.set({
-            type: $attributes.type,
-            source: $attributes.source
+          return $scope.$watch(function() {
+            ngModalContents.set({
+              type: $attributes.type,
+              source: $attributes.source
+            });
+            if ((ngModalContents != null) && (ngModalContents.get() != null)) {
+              return document.getElementsByClassName('ng-modal-dialog-content')[0].innerHTML = $sce.trustAsHtml(ngModalContents.getContentTemplate());
+            } else {
+              return document.getElementsByClassName('ng-modal-dialog-content')[0].innerHTML = '';
+            }
           });
-          if ((ngModalContents != null) && (ngModalContents.get() != null)) {
-            return document.getElementsByClassName('ng-modal-dialog-content')[0].innerHTML = $sce.trustAsHtml(ngModalContents.getContentTemplate());
-          } else {
-            return document.getElementsByClassName('ng-modal-dialog-content')[0].innerHTML = '';
-          }
         }
       };
     }

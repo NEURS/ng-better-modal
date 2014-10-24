@@ -85,7 +85,8 @@
         restrict: 'A',
         scope: {
           type: '@',
-          source: '@'
+          source: '@',
+          id: '='
         },
         link: function($scope, $element, $attributes) {
           return $scope.$watch(function() {
@@ -94,9 +95,9 @@
               source: $attributes.source
             });
             if ((ngModalContents != null) && (ngModalContents.get() != null)) {
-              return $element.parent().innerHTML($sce.trustAsHtml(ngModalContents.getContentTemplate()));
+              return $element.html($sce.trustAsHtml(ngModalContents.getContentTemplate()));
             } else {
-              return $element.parent().innerHTML('');
+              return $element.html('');
             }
           });
         }
@@ -111,7 +112,8 @@
         scope: {
           show: '=',
           dialogTitle: '@',
-          onClose: '&?'
+          onClose: '&?',
+          id: '='
         },
         replace: true,
         transclude: true,

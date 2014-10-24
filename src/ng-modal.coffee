@@ -69,21 +69,21 @@ app.factory 'ngModalContents', ->
 
 app.directive 'modalContent', ['ngModalContents','$sce', (ngModalContents, $sce) ->
   restrict: 'A'
-  scope: {
-    type: '@',
+  scope:
+    type: '@'
     source: '@'
-  }
+    id: '='
+
   link: ($scope, $element, $attributes) ->
     $scope.$watch ()->
       ngModalContents.set {
         type: $attributes.type,
         source: $attributes.source
       }
-
       if ngModalContents? and ngModalContents.get()?
-        $element.parent().innerHTML $sce.trustAsHtml ngModalContents.getContentTemplate()
+        return $element.html $sce.trustAsHtml ngModalContents.getContentTemplate()
       else
-        $element.parent().innerHTML ''
+        return $element.html ''
 
 ]
 app.directive 'modalDialog', ['ngModalDefaults', '$sce', (ngModalDefaults, $sce) ->
@@ -92,6 +92,7 @@ app.directive 'modalDialog', ['ngModalDefaults', '$sce', (ngModalDefaults, $sce)
     show: '='
     dialogTitle: '@'
     onClose: '&?'
+    id: '='
   replace: true
   transclude: true
   link: (scope, element, attrs) ->

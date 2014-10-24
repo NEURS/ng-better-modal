@@ -88,7 +88,6 @@
           source: '@'
         },
         link: function($scope, $element, $attributes) {
-          console.log($attributes);
           ngModalContents.set({
             type: $attributes.type,
             source: $attributes.source

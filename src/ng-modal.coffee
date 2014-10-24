@@ -74,7 +74,6 @@ app.directive 'modalContent', ['ngModalContents','$sce', (ngModalContents, $sce)
     source: '@'
   }
   link: ($scope, $element, $attributes) ->
-    console.log $attributes
     ngModalContents.set {
       type: $attributes.type,
       source: $attributes.source

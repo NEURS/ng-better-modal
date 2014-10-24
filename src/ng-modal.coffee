@@ -81,9 +81,9 @@ app.directive 'modalContent', ['ngModalContents','$sce', (ngModalContents, $sce)
       }
 
       if ngModalContents? and ngModalContents.get()?
-        document.getElementsByClassName('ng-modal-dialog-content')[0].innerHTML = $sce.trustAsHtml ngModalContents.getContentTemplate()
+        $element.parent().innerHTML $sce.trustAsHtml ngModalContents.getContentTemplate()
       else
-        document.getElementsByClassName('ng-modal-dialog-content')[0].innerHTML = ''
+        $element.parent().innerHTML ''
 
 ]
 app.directive 'modalDialog', ['ngModalDefaults', '$sce', (ngModalDefaults, $sce) ->

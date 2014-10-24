@@ -94,9 +94,9 @@
               source: $attributes.source
             });
             if ((ngModalContents != null) && (ngModalContents.get() != null)) {
-              return document.getElementsByClassName('ng-modal-dialog-content')[0].innerHTML = $sce.trustAsHtml(ngModalContents.getContentTemplate());
+              return $element.parent().innerHTML($sce.trustAsHtml(ngModalContents.getContentTemplate()));
             } else {
-              return document.getElementsByClassName('ng-modal-dialog-content')[0].innerHTML = '';
+              return $element.parent().innerHTML('');
             }
           });
         }

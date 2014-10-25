@@ -90,6 +90,9 @@
         },
         link: function($scope, $element, $attributes) {
           return $scope.$watch(function() {
+            if ($attributes.type === '' || $attributes.source === '') {
+              return $element.html('');
+            }
             ngModalContents.set({
               type: $attributes.type,
               source: $attributes.source

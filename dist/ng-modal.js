@@ -98,7 +98,7 @@
               source: $attributes.source
             });
             if ((ngModalContents != null) && (ngModalContents.get() != null)) {
-              if ($attibutes.type === 'video') {
+              if ($attributes.type === 'video') {
                 $element.addClass('fluid-container video');
               }
               return $element.html($sce.trustAsHtml(ngModalContents.getContentTemplate()));

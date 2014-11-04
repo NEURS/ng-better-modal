@@ -83,7 +83,7 @@ app.directive 'modalContent', ['ngModalContents','$sce', (ngModalContents, $sce)
         source: $attributes.source
       }
       if ngModalContents? and ngModalContents.get()?
-        if($attibutes.type is 'video')
+        if($attributes.type is 'video')
           $element.addClass('fluid-container video');
         return $element.html $sce.trustAsHtml ngModalContents.getContentTemplate()
       else

@@ -17,11 +17,18 @@
   opacity: 0.8;
 }
 .ng-modal-dialog {
+  width: 90%;
+}
+@media (min-width: 768px) {
+  .ng-modal-dialog {
+    width: 50% !important;
+  }
+}
+.ng-modal-dialog {
   z-index:10000;
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 50%;
   transform: translate(-50%, -50%);
   -webkit-transform: translate(-50%, -50%);
   -moz-transform: translate(-50%, -50%);

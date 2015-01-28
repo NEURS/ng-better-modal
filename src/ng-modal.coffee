@@ -76,8 +76,14 @@ app.directive 'modalContent', ['ngModalContents','$sce', (ngModalContents, $sce)
 
   link: ($scope, $element, $attributes) ->
     $scope.$watch ()->
+      contents = ngModalContents.get();
+
+      if (contents.type == $attributes.type and contents.source == $attributes.source)
+          return;
+
       if($attributes.type == '' or $attributes.source == '')
         return $element.html '';
+
       ngModalContents.set {
         type: $attributes.type,
         source: $attributes.source
